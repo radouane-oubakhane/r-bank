@@ -1,0 +1,13 @@
+package com.rbank.rbank;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class RBankApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(RBankApplication.class, args);
+    }
+
+}
