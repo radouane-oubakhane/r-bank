@@ -18,7 +18,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountTransactions {
+public class AccountTransaction {
     @Id
     @Column(name = "transaction_id")
     private String transactionId;
@@ -27,7 +27,7 @@ public class AccountTransactions {
     private long accountNumber;
 
     @Column(name = "customer_id")
-    private int customerId;
+    private Long customerId;
 
     @Column(name="transaction_dt")
     private Date transactionDt;

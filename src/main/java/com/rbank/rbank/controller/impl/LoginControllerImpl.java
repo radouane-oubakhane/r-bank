@@ -16,9 +16,11 @@ public class LoginControllerImpl implements LoginController {
 
     private final LoginService loginService;
 
+
+    @Override
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody CustomerRequest customer) {
-        return loginService.registerUser(customer);
+    public ResponseEntity<String> registerUser(@RequestBody CustomerRequest customerRequest) {
+        return loginService.registerUser(customerRequest);
     }
 
 }

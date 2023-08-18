@@ -15,9 +15,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Accounts {
+public class Account {
     @Column(name = "customer_id")
-    private int customerId;
+    private long customerId;
     @Column(name="account_number")
     @Id
     private long accountNumber;

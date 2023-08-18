@@ -1,9 +1,9 @@
-package com.rbank.rbank.controller;
+package com.rbank.rbank.service;
 
 import com.rbank.rbank.dto.ContactRequest;
 import com.rbank.rbank.dto.ContactResponse;
 import org.springframework.http.ResponseEntity;
 
-public interface ContactController {
+public interface ContactService {
     ResponseEntity<ContactResponse> saveContactInquiryDetails(ContactRequest contactRequest);
 }

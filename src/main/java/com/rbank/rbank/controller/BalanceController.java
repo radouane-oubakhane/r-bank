@@ -1,5 +1,10 @@
 package com.rbank.rbank.controller;
 
+import com.rbank.rbank.dto.AccountTransactionResponse;
+import org.springframework.http.ResponseEntity;
+
+import java.util.List;
+
 public interface BalanceController {
-    String getBalance();
+    ResponseEntity<List<AccountTransactionResponse>> getBalance(Long customerId);
 }

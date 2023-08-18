@@ -1,10 +1,10 @@
-package com.rbank.rbank.controller;
+package com.rbank.rbank.service;
 
 import com.rbank.rbank.dto.NoticeResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface NoticesController {
+public interface NoticeService {
     ResponseEntity<List<NoticeResponse>> getNoticesDetails();
 }
