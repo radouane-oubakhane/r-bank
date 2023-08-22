@@ -7,12 +7,9 @@ import com.rbank.rbank.repository.NoticeRepository;
 import com.rbank.rbank.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.CacheControl;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -24,11 +21,9 @@ public class NoticeServiceImpl implements NoticeService {
     private final NoticeMapper noticeMapper;
 
     @Override
-    public ResponseEntity<List<NoticeResponse>> getNoticesDetails() {
+    public List<NoticeResponse> getNoticesDetails() {
         List<Notice> notices = noticeRepository.findAllActiveNotices();
-        return ResponseEntity.ok()
-                .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS))
-                .body(notices.stream().map(noticeMapper).toList());
+        return (notices.stream().map(noticeMapper).toList());
     }
 }
 

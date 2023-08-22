@@ -1,10 +1,7 @@
 package com.rbank.rbank.model;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,8 +17,9 @@ import java.util.Date;
 @AllArgsConstructor
 public class Contact {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "contact_id")
-    private String contactId;
+    private Long contactId;
 
     @Column(name = "contact_name")
     private String contactName;

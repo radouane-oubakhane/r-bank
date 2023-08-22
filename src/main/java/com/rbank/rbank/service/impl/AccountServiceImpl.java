@@ -9,7 +9,6 @@ import com.rbank.rbank.service.AccountService;
 import com.rbank.rbank.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -23,7 +22,7 @@ public class AccountServiceImpl implements AccountService {
     private final AccountMapper accountMapper;
 
     @Override
-    public ResponseEntity<AccountResponse> getAccountDetails(Long customerId) {
+    public AccountResponse getAccountDetails(Long customerId) {
         log.info("Fetching account details for customer id: {}", customerId);
         if (!customerService.isCustomerExists(customerId)) {
             log.error("Customer not found for id: {}", customerId);
@@ -33,6 +32,6 @@ public class AccountServiceImpl implements AccountService {
                 () -> new CustomerNotFoundException("Customer not found")
         );
 
-        return ResponseEntity.ok(accountMapper.apply(account));
+        return accountMapper.apply(account);
     }
 }

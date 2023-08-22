@@ -9,7 +9,6 @@ import com.rbank.rbank.service.BalanceService;
 import com.rbank.rbank.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +23,7 @@ public class BalanceServiceImpl implements BalanceService {
     private final CustomerService customerService;
     private final AccountTransactionMapper accountTransactionMapper;
     @Override
-    public ResponseEntity<List<AccountTransactionResponse>> getBalanceDetails(Long customerId) {
+    public List<AccountTransactionResponse> getBalanceDetails(Long customerId) {
         log.info("Fetching balance details for customer id: {}", customerId);
         if (!customerService.isCustomerExists(customerId)) {
             log.error("Customer not found for id: {}", customerId);
@@ -34,6 +33,6 @@ public class BalanceServiceImpl implements BalanceService {
         List<AccountTransaction> accountTransactions = accountTransactionRepository.findByCustomerIdOrderByTransactionDtDesc(customerId);
 
         log.info("Fetched balance details for customer id: {}", customerId);
-        return ResponseEntity.ok(accountTransactions.stream().map(accountTransactionMapper).toList());
+        return accountTransactions.stream().map(accountTransactionMapper).toList();
     }
 }

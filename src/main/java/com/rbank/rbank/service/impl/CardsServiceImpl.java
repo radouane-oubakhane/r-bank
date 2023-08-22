@@ -25,7 +25,7 @@ public class CardsServiceImpl implements CardsService {
     private final CardMapper cardMapper;
 
     @Override
-    public ResponseEntity<List<CardResponse>> getCardsDetails(Long customerId) {
+    public List<CardResponse> getCardsDetails(Long customerId) {
     log.info("Fetching cards details for customer id: {}", customerId);
         if (!customerService.isCustomerExists(customerId)) {
             log.error("Customer not found for id: {}", customerId);
@@ -35,7 +35,7 @@ public class CardsServiceImpl implements CardsService {
         List<Card> cards = cardRepository.findByCustomerId(customerId);
 
         log.info("Fetched cards details for customer id: {}", customerId);
-        return ResponseEntity.ok(cards.stream().map(cardMapper).toList());
+        return cards.stream().map(cardMapper).toList();
 
     }
 }

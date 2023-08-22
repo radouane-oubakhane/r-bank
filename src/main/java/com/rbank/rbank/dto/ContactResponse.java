@@ -13,7 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContactResponse {
-    private String contactId;
+    private Long contactId;
     private String contactName;
     private String contactEmail;
     private String subject;

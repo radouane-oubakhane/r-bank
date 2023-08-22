@@ -23,6 +23,6 @@ public class CardsControllerImpl implements CardsController {
     @Override
     @GetMapping
     public ResponseEntity<List<CardResponse>> getCardsDetails(@RequestParam Long customerId) {
-        return cardsService.getCardsDetails(customerId);
+        return ResponseEntity.ok(cardsService.getCardsDetails(customerId));
     }
 }

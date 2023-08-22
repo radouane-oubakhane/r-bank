@@ -22,6 +22,6 @@ public class BalanceControllerImpl implements BalanceController {
     @Override
     @RequestMapping
     public ResponseEntity<List<AccountTransactionResponse>> getBalance(@RequestParam Long customerId) {
-        return balanceService.getBalanceDetails(customerId);
+        return ResponseEntity.ok(balanceService.getBalanceDetails(customerId));
     }
 }

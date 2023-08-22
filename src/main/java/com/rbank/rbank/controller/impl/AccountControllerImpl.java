@@ -21,7 +21,7 @@ public class AccountControllerImpl implements AccountController {
     @Override
     @GetMapping
     public ResponseEntity<AccountResponse> getAccountDetails(Long customerId) {
-        return accountService.getAccountDetails(customerId);
+        return ResponseEntity.ok(accountService.getAccountDetails(customerId));
     }
 }
 

@@ -23,6 +23,6 @@ public class LoansControllerImpl implements LoansController {
     @Override
     @GetMapping
     public ResponseEntity<List<LoanResponse>> getLoansDetails(@RequestParam Long customerId) {
-        return loansService.getLoansDetails(customerId);
+        return ResponseEntity.ok(loansService.getLoansDetails(customerId));
     }
 }

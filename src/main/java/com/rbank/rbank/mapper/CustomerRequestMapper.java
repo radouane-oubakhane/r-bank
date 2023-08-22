@@ -13,7 +13,9 @@ public class CustomerRequestMapper implements Function<CustomerRequest, Customer
     @Override
     public Customer apply(CustomerRequest customerRequest) {
         return Customer.builder()
+                .name(customerRequest.getName())
                 .email(customerRequest.getEmail())
+                .mobileNumber(customerRequest.getMobileNumber())
                 .pwd(customerRequest.getPwd())
                 .role(customerRequest.getRole())
                 .build();

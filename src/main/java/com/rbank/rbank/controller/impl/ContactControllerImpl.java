@@ -19,6 +19,6 @@ public class ContactControllerImpl implements ContactController {
     @Override
     @PostMapping
     public ResponseEntity<ContactResponse> saveContactInquiryDetails(@RequestBody ContactRequest contactRequest) {
-        return contactService.saveContactInquiryDetails(contactRequest);
+        return ResponseEntity.ok(contactService.saveContactInquiryDetails(contactRequest));
     }
 }

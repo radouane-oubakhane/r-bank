@@ -9,7 +9,6 @@ import com.rbank.rbank.service.CustomerService;
 import com.rbank.rbank.service.LoansService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +23,7 @@ public class LoansServiceImpl implements LoansService {
     private final CustomerService customerService;
     private final LoanMapper loanMapper;
     @Override
-    public ResponseEntity<List<LoanResponse>> getLoansDetails(Long customerId) {
+    public List<LoanResponse> getLoansDetails(Long customerId) {
         log.info("Fetching loans details for customer id: {}", customerId);
 
         if (!customerService.isCustomerExists(customerId)) {
@@ -36,7 +35,7 @@ public class LoansServiceImpl implements LoansService {
 
         log.info("Fetched loans details for customer id: {}", customerId);
 
-        return ResponseEntity.ok(loans.stream().map(loanMapper).toList());
+        return loans.stream().map(loanMapper).toList();
 
     }
 }

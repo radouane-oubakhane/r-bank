@@ -8,9 +8,10 @@ import com.rbank.rbank.repository.CustomerRepository;
 import com.rbank.rbank.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 
 @Service
@@ -24,19 +25,25 @@ public class LoginServiceImpl implements LoginService {
 
 
     @Override
-    public ResponseEntity<String> registerUser(CustomerRequest customerRequest) {
+    public String registerUser(CustomerRequest customerRequest) {
         log.info("Registering user with email: {}", customerRequest.getEmail());
         if (customerRepository.existsByEmail(customerRequest.getEmail())) {
             log.error("Email already used: {}", customerRequest.getEmail());
-            return ResponseEntity.badRequest().body("Email already used");
+            throw new IllegalArgumentException("Email already used");
+        }
+        if (customerRepository.existsByMobileNumber(customerRequest.getMobileNumber())) {
+            log.error("Mobile number already used: {}", customerRequest.getMobileNumber());
+            throw new IllegalArgumentException("Mobile number already used");
         }
         Customer customer = customerRequestMapper.apply(customerRequest);
         String hashPwd = passwordEncoder.encode(customer.getPwd());
         customer.setPwd(hashPwd);
+        customer.setCreateDt(String.valueOf(new Date(System.currentTimeMillis())));
         customerRepository.save(customer);
         log.info("User registered successfully with email: {}", customerRequest.getEmail());
-        return ResponseEntity.ok("User registered successfully");
+        return"User registered successfully";
     }
+
 
     @Override
     public Customer getCustomerByEmail(String email) {
@@ -47,4 +54,6 @@ public class LoginServiceImpl implements LoginService {
         }
         return customer;
     }
+
+
 }
