@@ -1,5 +1,6 @@
 package com.rbank.rbank.config;
 
+import com.rbank.rbank.model.Authority;
 import com.rbank.rbank.model.Customer;
 import com.rbank.rbank.service.LoginService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -29,12 +31,20 @@ public class RBankUsernamePwdAuthenticationProvider implements AuthenticationPro
         String userName = authentication.getName();
         String pwd = authentication.getCredentials().toString();
         Customer customer = loginService.getCustomerByEmail(userName);
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(customer.getRole()));
+
         if (passwordEncoder.matches(pwd, customer.getPwd())) {
-            return new UsernamePasswordAuthenticationToken(userName, pwd, authorities);
+            return new UsernamePasswordAuthenticationToken(userName, pwd, getGrantedAuthorities(customer.getAuthorities()));
         }
         throw new BadCredentialsException("Invalid credentials");
+    }
+
+
+    private List<GrantedAuthority> getGrantedAuthorities(Set<Authority> authorities) {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        authorities.forEach(authority -> {
+            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getName()));
+        });
+        return grantedAuthorities;
     }
 
     @Override
