@@ -25,6 +25,8 @@ public class RBankSecurityConfig {
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         CsrfTokenRequestAttributeHandler csrfTokenRequestAttributeHandler = new CsrfTokenRequestAttributeHandler();
         csrfTokenRequestAttributeHandler.setCsrfRequestAttributeName("_csrf");
+
+
         http.securityContext().requireExplicitSave(false)
                 .and().sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .cors().configurationSource(
@@ -47,8 +49,12 @@ public class RBankSecurityConfig {
                                 .ignoringRequestMatchers("/contact/**", "/register")
                                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
-                .authorizeRequests()
-                .requestMatchers("/account/**", "/balance/**", "/loans/**", "/cards/**").authenticated()
+                .authorizeHttpRequests()
+                .requestMatchers("/account/**").hasAuthority("VIEWACCOUNT")
+                .requestMatchers("/balance/**").hasAnyAuthority("VIEWACCOUNT","VIEWBALANCE")
+                .requestMatchers("/loans/**").hasAuthority("VIEWLOANS")
+                .requestMatchers("/cards/**").hasAuthority("VIEWCARDS")
+                .requestMatchers("/user").authenticated()
                 .requestMatchers("/notices/**", "/contact/**", "/register").permitAll()
                 .and().formLogin()
                 .and().httpBasic();

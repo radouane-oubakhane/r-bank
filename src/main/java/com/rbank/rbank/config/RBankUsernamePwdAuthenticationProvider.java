@@ -2,8 +2,10 @@ package com.rbank.rbank.config;
 
 import com.rbank.rbank.model.Authority;
 import com.rbank.rbank.model.Customer;
+import com.rbank.rbank.service.AuthorityService;
 import com.rbank.rbank.service.LoginService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,11 +21,13 @@ import java.util.List;
 import java.util.Set;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class RBankUsernamePwdAuthenticationProvider implements AuthenticationProvider {
 
     private final LoginService loginService;
     private final PasswordEncoder passwordEncoder;
+    private final AuthorityService authorityService;
 
 
     @Override
@@ -31,9 +35,11 @@ public class RBankUsernamePwdAuthenticationProvider implements AuthenticationPro
         String userName = authentication.getName();
         String pwd = authentication.getCredentials().toString();
         Customer customer = loginService.getCustomerByEmail(userName);
+        Set<Authority> authorities = authorityService.getAuthority(customer.getId());
+
 
         if (passwordEncoder.matches(pwd, customer.getPwd())) {
-            return new UsernamePasswordAuthenticationToken(userName, pwd, getGrantedAuthorities(customer.getAuthorities()));
+            return new UsernamePasswordAuthenticationToken(userName, pwd, getGrantedAuthorities(authorities));
         }
         throw new BadCredentialsException("Invalid credentials");
     }

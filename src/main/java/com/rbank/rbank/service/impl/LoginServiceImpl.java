@@ -6,6 +6,7 @@ import com.rbank.rbank.mapper.CustomerRequestMapper;
 import com.rbank.rbank.model.Customer;
 import com.rbank.rbank.repository.CustomerRepository;
 import com.rbank.rbank.service.LoginService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +18,7 @@ import java.util.Date;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class LoginServiceImpl implements LoginService {
 
     private final CustomerRepository customerRepository;

@@ -1,6 +1,7 @@
 package com.rbank.rbank.service.impl;
 
 import com.rbank.rbank.dto.AccountResponse;
+import com.rbank.rbank.exception.AccountNotFoundException;
 import com.rbank.rbank.exception.CustomerNotFoundException;
 import com.rbank.rbank.mapper.AccountMapper;
 import com.rbank.rbank.model.Account;
@@ -10,6 +11,7 @@ import com.rbank.rbank.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 
 
 @Service
@@ -29,7 +31,7 @@ public class AccountServiceImpl implements AccountService {
             throw new CustomerNotFoundException("Customer not found");
         }
         Account account = accountsRepository.findByCustomerId(customerId).orElseThrow(
-                () -> new CustomerNotFoundException("Customer not found")
+                () -> new AccountNotFoundException("Account not found")
         );
 
         return accountMapper.apply(account);

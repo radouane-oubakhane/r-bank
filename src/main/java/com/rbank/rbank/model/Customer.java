@@ -33,6 +33,6 @@ public class Customer {
     private String createDt;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Authority> authorities;
 }
