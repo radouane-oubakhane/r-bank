@@ -5,6 +5,7 @@ import com.rbank.rbank.filter.CsrfCookieFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,7 +14,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
-import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -27,37 +27,39 @@ public class RBankSecurityConfig {
         csrfTokenRequestAttributeHandler.setCsrfRequestAttributeName("_csrf");
 
 
-        http.securityContext().requireExplicitSave(false)
-                .and().sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
-                .cors().configurationSource(
-                        new CorsConfigurationSource() {
-                            @Override
-                            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                                CorsConfiguration corsConfiguration = new CorsConfiguration();
-                                corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
-                                corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-                                corsConfiguration.setAllowedHeaders(List.of("*"));
-                                corsConfiguration.setAllowCredentials(true);
-                                corsConfiguration.setMaxAge(3600L);
-                                return corsConfiguration;
-                            }
-                        }
-                ).and()
-                .csrf(
+        http.securityContext((context) -> context.requireExplicitSave(false))
+                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+                .cors(cors -> cors.configurationSource(request -> {
+                    CorsConfiguration corsConfiguration = new CorsConfiguration();
+                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+                    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+                    corsConfiguration.setAllowedHeaders(List.of("*"));
+                    corsConfiguration.setAllowCredentials(true);
+                    corsConfiguration.setMaxAge(3600L);
+                    return corsConfiguration;
+                }
+                )).csrf(
                         (csrf) -> csrf
                                 .csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
                                 .ignoringRequestMatchers("/contact/**", "/register")
                                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
-                .authorizeHttpRequests()
-                .requestMatchers("/account/**").hasAuthority("VIEWACCOUNT")
-                .requestMatchers("/balance/**").hasAnyAuthority("VIEWACCOUNT","VIEWBALANCE")
-                .requestMatchers("/loans/**").hasAuthority("VIEWLOANS")
-                .requestMatchers("/cards/**").hasAuthority("VIEWCARDS")
+                .authorizeHttpRequests((requests)->requests
+
+//                .requestMatchers("/account/**").hasAuthority("VIEWACCOUNT")
+//                .requestMatchers("/balance/**").hasAnyAuthority("VIEWACCOUNT","VIEWBALANCE")
+//                .requestMatchers("/loans/**").hasAuthority("VIEWLOANS")
+//                .requestMatchers("/cards/**").hasAuthority("VIEWCARDS")
+
+                .requestMatchers("/account/**").hasRole("USER")
+                .requestMatchers("/balance/**").hasAnyRole("USER","ADMIN")
+                .requestMatchers("/loans/**").hasRole("USER")
+                .requestMatchers("/cards/**").hasRole("USER")
+
                 .requestMatchers("/user").authenticated()
-                .requestMatchers("/notices/**", "/contact/**", "/register").permitAll()
-                .and().formLogin()
-                .and().httpBasic();
+                .requestMatchers("/notices/**", "/contact/**", "/register").permitAll())
+                .formLogin(Customizer.withDefaults())
+                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
 
