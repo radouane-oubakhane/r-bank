@@ -2,7 +2,7 @@ package com.rbank.rbank.config;
 
 
 import com.rbank.rbank.filter.CsrfCookieFilter;
-import jakarta.servlet.http.HttpServletRequest;
+import com.rbank.rbank.filter.RequestValidationBeforeFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -15,7 +15,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.List;
 
@@ -44,6 +43,7 @@ public class RBankSecurityConfig {
                                 .ignoringRequestMatchers("/contact/**", "/register")
                                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests)->requests
 
 //                .requestMatchers("/account/**").hasAuthority("VIEWACCOUNT")
