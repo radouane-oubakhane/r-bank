@@ -1,6 +1,7 @@
 package com.rbank.rbank.config;
 
 
+import com.rbank.rbank.filter.AuthoritiesLoggingAfterFilter;
 import com.rbank.rbank.filter.CsrfCookieFilter;
 import com.rbank.rbank.filter.RequestValidationBeforeFilter;
 import org.springframework.context.annotation.Bean;
@@ -44,6 +45,7 @@ public class RBankSecurityConfig {
                                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new AuthoritiesLoggingAfterFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests)->requests
 
 //                .requestMatchers("/account/**").hasAuthority("VIEWACCOUNT")
