@@ -1,9 +1,8 @@
 package com.rbank.rbank.config;
 
 
-import com.rbank.rbank.filter.AuthoritiesLoggingAfterFilter;
-import com.rbank.rbank.filter.CsrfCookieFilter;
-import com.rbank.rbank.filter.RequestValidationBeforeFilter;
+import com.rbank.rbank.constants.SecurityConstants;
+import com.rbank.rbank.filter.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -27,14 +26,16 @@ public class RBankSecurityConfig {
         csrfTokenRequestAttributeHandler.setCsrfRequestAttributeName("_csrf");
 
 
-        http.securityContext((context) -> context.requireExplicitSave(false))
-                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+//        http.securityContext((context) -> context.requireExplicitSave(false))
+//                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+          http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
                     corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
                     corsConfiguration.setAllowedHeaders(List.of("*"));
                     corsConfiguration.setAllowCredentials(true);
+                    corsConfiguration.setExposedHeaders(List.of(SecurityConstants.JWT_HEADER));
                     corsConfiguration.setMaxAge(3600L);
                     return corsConfiguration;
                 }
@@ -43,9 +44,13 @@ public class RBankSecurityConfig {
                                 .csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
                                 .ignoringRequestMatchers("/contact/**", "/register")
                                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new AuthoritiesLoggingAfterFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
+
                 .authorizeHttpRequests((requests)->requests
 
 //                .requestMatchers("/account/**").hasAuthority("VIEWACCOUNT")
@@ -101,3 +106,4 @@ public class RBankSecurityConfig {
 //        return new InMemoryUserDetailsManager(admin, user);
 //    }
 }
+
