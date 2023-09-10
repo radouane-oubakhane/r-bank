@@ -5,7 +5,6 @@ import com.rbank.rbank.model.Customer;
 import com.rbank.rbank.service.AuthorityService;
 import com.rbank.rbank.service.LoginService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Set;
 
 @Component
-@Slf4j
 @RequiredArgsConstructor
 public class RBankUsernamePwdAuthenticationProvider implements AuthenticationProvider {
 
@@ -47,9 +45,7 @@ public class RBankUsernamePwdAuthenticationProvider implements AuthenticationPro
 
     private List<GrantedAuthority> getGrantedAuthorities(Set<Authority> authorities) {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        authorities.forEach(authority -> {
-            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getName()));
-        });
+        authorities.forEach(authority -> grantedAuthorities.add(new SimpleGrantedAuthority(authority.getName())));
         return grantedAuthorities;
     }
 

@@ -9,6 +9,7 @@ import com.rbank.rbank.service.CustomerService;
 import com.rbank.rbank.service.LoansService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,9 @@ public class LoansServiceImpl implements LoansService {
     private final LoanRepository loanRepository;
     private final CustomerService customerService;
     private final LoanMapper loanMapper;
+
+
+    @PreAuthorize("hasRole('USER')")
     @Override
     public List<LoanResponse> getLoansDetails(Long customerId) {
         log.info("Fetching loans details for customer id: {}", customerId);
@@ -39,3 +43,4 @@ public class LoansServiceImpl implements LoansService {
 
     }
 }
+
